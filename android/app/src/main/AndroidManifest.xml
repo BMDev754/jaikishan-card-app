@@ -21,14 +21,7 @@
         android:label="Jaikisan Card"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:enableOnBackInvokedCallback="true"
-        android:supportsRtl="true">
-        
-        <!-- Support 16 KB memory page sizes -->
-        <meta-data
-            android:name="android.supports_16kb_page_size"
-            android:value="true" />
-        
+        android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
