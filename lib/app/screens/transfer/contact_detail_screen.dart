@@ -7,12 +7,14 @@ class ContactDetailScreen extends StatelessWidget {
   final String contactName;
   final String phoneNumber;
   final Contact? contact;
+  final String? contactID; // Add ContactID parameter from POS API
 
   const ContactDetailScreen({
     super.key,
     required this.contactName,
     required this.phoneNumber,
     this.contact,
+    this.contactID,
   });
 
   @override
@@ -209,67 +211,67 @@ class ContactDetailScreen extends StatelessWidget {
                 const SizedBox(width: 12),
                 
                 // Request Button
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _handleRequest(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF2196F3),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: const Text(
-                      'Request',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
+                // Expanded(
+                //   child: ElevatedButton(
+                //     onPressed: () => _handleRequest(context),
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: const Color(0xFF2196F3),
+                //       foregroundColor: Colors.white,
+                //       padding: const EdgeInsets.symmetric(vertical: 16),
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(8),
+                //       ),
+                //       elevation: 0,
+                //     ),
+                //     child: const Text(
+                //       'Request',
+                //       style: TextStyle(
+                //         fontSize: 16,
+                //         fontWeight: FontWeight.w600,
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 
-                const SizedBox(width: 12),
+                // const SizedBox(width: 12),
                 
                 // Message Button
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: IconButton(
-                    onPressed: () => _handleMessage(context),
-                    icon: const Icon(
-                      Icons.message,
-                      color: Colors.grey,
-                      size: 24,
-                    ),
-                  ),
-                ),
+                // Container(
+                //   width: 50,
+                //   height: 50,
+                //   decoration: BoxDecoration(
+                //     color: Colors.grey[200],
+                //     borderRadius: BorderRadius.circular(8),
+                //   ),
+                //   child: IconButton(
+                //     onPressed: () => _handleMessage(context),
+                //     icon: const Icon(
+                //       Icons.message,
+                //       color: Colors.grey,
+                //       size: 24,
+                //     ),
+                //   ),
+                // ),
                 
-                const SizedBox(width: 8),
+                // const SizedBox(width: 8),
                 
                 // Send Arrow Button
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: IconButton(
-                    onPressed: () => _handleSend(context),
-                    icon: const Icon(
-                      Icons.send,
-                      color: Colors.grey,
-                      size: 24,
-                    ),
-                  ),
-                ),
+                // Container(
+                //   width: 50,
+                //   height: 50,
+                //   decoration: BoxDecoration(
+                //     color: Colors.grey[200],
+                //     borderRadius: BorderRadius.circular(8),
+                //   ),
+                //   child: IconButton(
+                //     onPressed: () => _handleSend(context),
+                //     icon: const Icon(
+                //       Icons.send,
+                //       color: Colors.grey,
+                //       size: 24,
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -326,6 +328,7 @@ class ContactDetailScreen extends StatelessWidget {
           phoneNumber: phoneNumber,
           contact: contact,
           isRequest: false,
+          contactID: contactID, // Pass ContactID from POS API response
         ),
       ),
     );
@@ -340,6 +343,7 @@ class ContactDetailScreen extends StatelessWidget {
           phoneNumber: phoneNumber,
           contact: contact,
           isRequest: true,
+          contactID: contactID, // Pass ContactID from POS API response
         ),
       ),
     );

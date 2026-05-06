@@ -172,15 +172,28 @@ class _GooglePayStylePaymentScreenState extends State<GooglePayStylePaymentScree
         
         final email = await authProvider.getApiUserEmail();
         final tokenCode = await authProvider.getTokenCode();
-        final senderContactID = await authProvider.getContactID();
+        final userContactID = await authProvider.getContactID();
         
-        // Use provided ContactID as receiver, or fallback to sender's ContactID for testing
-        final receiverContactID = widget.contactID ?? senderContactID;
-        
-        if (email.isEmpty || tokenCode.isEmpty || senderContactID.isEmpty) {
+        if (email.isEmpty || tokenCode.isEmpty || userContactID.isEmpty) {
           throw Exception('Missing user credentials for API call');
         }
 
+        // Determine sender and receiver based on context
+        // If contactID is provided (from POS deposit flow), the user is the sender and contactID is the receiver
+        // Otherwise, user is the sender and contactID fallback is the receiver (normal payment flow)
+        late String senderContactID;
+        late String receiverContactID;
+        
+        if (widget.contactID != null && widget.contactID!.isNotEmpty) {
+          // POS Deposit flow: User sends money to RFID card holder
+          senderContactID = userContactID;
+          receiverContactID = widget.contactID!;
+        } else {
+          // Normal payment flow: User sends money to contact
+          senderContactID = userContactID;
+          receiverContactID = userContactID; // Fallback
+        }
+        
         // Get remarks from controller, or use default
         final remarks = _remarksController.text.trim().isEmpty 
             ? 'Payment to ${widget.contactName}'
@@ -191,6 +204,7 @@ class _GooglePayStylePaymentScreenState extends State<GooglePayStylePaymentScree
         print('Receiver: $receiverContactID');
         print('Amount: $_enteredAmount');
         print('Remarks: $remarks');
+        print('Is POS Deposit: ${widget.contactID != null && widget.contactID!.isNotEmpty}');
 
         // Call the send money API
         final result = await ApiService.sendAmountToMember(

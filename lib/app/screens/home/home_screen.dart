@@ -17,6 +17,7 @@ import '../transfer/contact_detail_screen.dart';
 import '../transaction/transaction_history_screen.dart';
 import '../webview/in_app_browser_screen.dart';
 import '../transfer/contact_transaction_history_screen.dart';
+import '../pos/pos_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -756,10 +757,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 label: 'To Mobile',
                 color: const Color(0xFF4CAF50),
               ),
+              /*
               _buildTransferOption(
                 icon: Icons.person,
                 label: 'To Self A/c',
                 color: const Color(0xFF9C27B0),
+              ),
+              */
+               // this is the pos option which is not implemented yet but we are keeping it for future use
+              _buildTransferOption(
+                icon: Icons.credit_card,
+                label: 'POS',
+                color: const Color(0xFFE91E63),
               ),
               _buildTransferOption(
                 icon: Icons.account_balance,
@@ -897,6 +906,14 @@ class _HomeScreenState extends State<HomeScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => const SelfAccountScreen(),
+        ),
+      );
+    } else if (option == 'POS') {
+      // Navigate to POS screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const POSScreen(),
         ),
       );
     } else if (option == 'Balance') {
