@@ -1,0 +1,2 @@
+cd "c:\Users\Dev2\Desktop\Amrit Work\Android Project\jaykisan_card"; flutter run
+cd "c:\Users\Dev2\Desktop\Amrit Work\Android Project\jaykisan_card"; flutter build apk --release

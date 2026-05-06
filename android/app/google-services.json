@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "486286615269",
+    "firebase_url": "https://cityride-fcad0-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "cityride-fcad0",
+    "storage_bucket": "cityride-fcad0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:486286615269:android:ff93308d0ca82879daaa0c",
+        "android_client_info": {
+          "package_name": "com.jaykisan.jaykisan_card"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApEa_INaCn-5m4GCJ_Um7PBYr5wiqFHSU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
