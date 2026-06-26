@@ -1236,4 +1236,44 @@ class ApiService {
       };
     }
   }
+  // Get User Notification Topics
+  static Future<List<String>> getUserTopics({
+    required String email,
+    required String tokenCode,
+    required String contactID,
+  }) async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            'https://api.v2cbazar.com/api/Response/RequestGetUserTopics/000001'),
+        headers: {
+          'Email': email,
+          'TokenCode': tokenCode,
+          'ContactID': contactID,
+          'Content-Type': 'application/json',
+          'CCode': 'V2CBAZAR',
+        },
+      ).timeout(_timeout);
+
+      print("Topic API Status : ${response.statusCode}");
+      print("Topic API Body : ${response.body}");
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+
+        if (json["status"] == true) {
+          return List<String>.from(json["topics"]);
+        }
+      }
+
+      return [];
+
+    } catch (e) {
+
+      print("Topic API Error : $e");
+
+      return [];
+
+    }
+  }
 }

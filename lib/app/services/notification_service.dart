@@ -17,6 +17,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/notification_model.dart';
+import '../services/api/api_service.dart';
 
 /// Background message handler - must be a top-level function
 /// Called when app is killed or in background
@@ -52,6 +53,8 @@ class NotificationService {
 
   // Firebase Messaging instance
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+  List<String> _currentTopics = [];
 
   // Local notifications instance
   late FlutterLocalNotificationsPlugin _localNotifications;
@@ -221,6 +224,15 @@ class NotificationService {
 
         // Send token to backend API
         await _sendTokenToBackend(token);
+
+
+        // Subscribe this user to the common topic
+        await _firebaseMessaging.subscribeToTopic("all_users");
+
+        print("================================");
+        print("Subscribed to Topic : all_users");
+        print("================================");
+
       } else {
         print('⚠ FCM Token is null or empty');
       }
@@ -510,6 +522,22 @@ class NotificationService {
     }
   }
 
+  Future<void> loadTopics({
+    required String email,
+    required String tokenCode,
+    required String contactID,
+  }) async {
+
+    final topics = await ApiService.getUserTopics(
+      email: email,
+      tokenCode: tokenCode,
+      contactID: contactID,
+    );
+
+    await syncTopics(topics);
+
+  }
+
   /// Get notification history
   List<PushNotification> getNotificationHistory() {
     return List.unmodifiable(_notificationHistory);
@@ -587,6 +615,57 @@ class NotificationService {
       'imageUrl': message.notification?.android?.imageUrl ?? message.notification?.apple?.imageUrl,
       'data': message.data,
     };
+  }
+
+  Future<void> syncTopics(List<String> apiTopics) async {
+
+    try {
+
+      final prefs = await SharedPreferences.getInstance();
+
+      final oldTopics = prefs.getStringList("user_topics") ?? [];
+
+      print("Old Topics : $oldTopics");
+      print("New Topics : $apiTopics");
+
+      // Unsubscribe removed topics
+      for (String topic in oldTopics) {
+
+        if (!apiTopics.contains(topic)) {
+
+          await _firebaseMessaging.unsubscribeFromTopic(topic);
+
+          print("Unsubscribed : $topic");
+
+        }
+
+      }
+
+      // Subscribe new topics
+      for (String topic in apiTopics) {
+
+        if (!oldTopics.contains(topic)) {
+
+          await _firebaseMessaging.subscribeToTopic(topic);
+
+          print("Subscribed : $topic");
+
+        }
+
+      }
+
+      await prefs.setStringList("user_topics", apiTopics);
+
+      _currentTopics = apiTopics;
+
+      print("Topic Sync Completed");
+
+    } catch (e) {
+
+      print("Topic Sync Error : $e");
+
+    }
+
   }
 
   /// Dispose resources
