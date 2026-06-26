@@ -18,6 +18,7 @@ import '../transaction/transaction_history_screen.dart';
 import '../webview/in_app_browser_screen.dart';
 import '../transfer/contact_transaction_history_screen.dart';
 import '../pos/pos_screen.dart';
+import '../../services/notification_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,6 +38,23 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadProfileImage();
+  
+     WidgetsBinding.instance.addPostFrameCallback((_) async {
+
+        final authProvider =
+            Provider.of<AuthProvider>(context, listen: false);
+
+        final email = await authProvider.getProfileEmail();
+        final token = await authProvider.getTokenCode();
+        final contactId = await authProvider.getContactID();
+
+        await NotificationService.instance.loadTopics(
+          email: email,
+          tokenCode: token,
+          contactID: contactId,
+        );
+
+      });
     
     // Delay the API call to ensure AuthProvider is properly initialized
     WidgetsBinding.instance.addPostFrameCallback((_) {

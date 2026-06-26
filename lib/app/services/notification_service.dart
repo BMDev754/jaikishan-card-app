@@ -18,6 +18,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/notification_model.dart';
 import '../services/api/api_service.dart';
+import '../screens/home/home_screen.dart';
 
 /// Background message handler - must be a top-level function
 /// Called when app is killed or in background
@@ -527,16 +528,28 @@ class NotificationService {
     required String tokenCode,
     required String contactID,
   }) async {
+    try {
+      print("========== LOAD TOPICS ==========");
 
-    final topics = await ApiService.getUserTopics(
-      email: email,
-      tokenCode: tokenCode,
-      contactID: contactID,
-    );
+      print("Email : $email");
+      print("Token : $tokenCode");
+      print("ContactID : $contactID");
 
-    await syncTopics(topics);
+      final topics = await ApiService.getUserTopics(
+        email: email,
+        tokenCode: tokenCode,
+        contactID: contactID,
+      );
 
+      print("Topics From API : $topics");
+
+      await syncTopics(topics);
+
+    } catch (e) {
+      print("Load Topic Error : $e");
+    }
   }
+
 
   /// Get notification history
   List<PushNotification> getNotificationHistory() {
@@ -633,7 +646,17 @@ class NotificationService {
 
         if (!apiTopics.contains(topic)) {
 
-          await _firebaseMessaging.unsubscribeFromTopic(topic);
+          try {
+
+            await _firebaseMessaging.unsubscribeFromTopic(topic);
+
+            print("SUCCESS Unsubscribe : $topic");
+
+          } catch(e){
+
+            print("FAILED Unsubscribe : $topic");
+
+          }
 
           print("Unsubscribed : $topic");
 
@@ -646,7 +669,19 @@ class NotificationService {
 
         if (!oldTopics.contains(topic)) {
 
-          await _firebaseMessaging.subscribeToTopic(topic);
+          try {
+
+            await _firebaseMessaging.subscribeToTopic(topic);
+
+            print("SUCCESS Subscribe : $topic");
+
+          } catch(e){
+
+            print("FAILED Subscribe : $topic");
+
+            print(e);
+
+          }
 
           print("Subscribed : $topic");
 
